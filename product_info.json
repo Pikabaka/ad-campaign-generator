@@ -1,0 +1,16 @@
+{
+    "company_name": "McDonald's",
+    "company_description": "The world's leading global foodservice retailer, serving millions of customers daily with quality, fast, and convenient food.",
+    "product_name": "Mushroom Swiss Burger",
+    "product_description": "A juicy 100% beef patty topped with savory sauteed mushrooms, melted Swiss cheese, crispy onions, and our signature sauce on a toasted sesame seed bun.",
+    "target_audience": "Adults 18-45 who appreciate premium burger flavors, foodies looking for a gourmet fast-food experience, and mushroom lovers",
+    "selling_points": [
+        "Made with 100% pure beef, never frozen",
+        "Real sauteed mushrooms with garlic and herbs",
+        "Premium Swiss cheese, not processed American",
+        "Limited-time offering - available only for a short time"
+    ],
+    "brand_colors": "#FFC72C, #DA291C, #27251F",
+    "call_to_action": "Try it today at your local McDonald's or order on the app!",
+    "additional_info": "Emphasize the gourmet, premium quality of the burger. The mood should feel warm, appetizing, and crave-worthy. Highlight the melting Swiss cheese and sizzling mushrooms."
+}
