@@ -1,0 +1,36 @@
+{
+  "timestamp": "20260429_100501",
+  "product_info": {
+    "company_name": "SafeDrive Innovations",
+    "company_description": "A cutting-edge automotive technology company focused on revolutionizing vehicle safety.",
+    "product_name": "The Static Car",
+    "product_description": "A revolutionary vehicle that remains stationary, ensuring zero accidents and providing ultimate peace of mind for drivers.",
+    "target_audience": "Safety-conscious consumers, families, and individuals looking for innovative vehicle solutions.",
+    "selling_points": [
+      "Guaranteed no accidents due to immobility",
+      "Innovative design for maximum safety",
+      "Perfect for urban environments and parking challenges"
+    ],
+    "brand_colors": "#FFFFFF, #000000, #FF5733",
+    "call_to_action": "Experience the future of safety - reserve your Static Car today!",
+    "additional_info": "Available for pre-order with customizable features."
+  },
+  "preset_id": "apple",
+  "campaign_theme": {
+    "slogan": "Safety Redefined: Where Innovation Meets Peace",
+    "theme": "A state of serene safety encapsulated in modern design. The Static Car represents a revolutionary approach to driving, ensuring peace of mind in a hectic world.",
+    "tone": "Calm, premium, aspirational, restrained",
+    "color_palette": "#FFFFFF dominant, #1D1D1F charcoal type, #86868B mid-grey accents",
+    "visual_style": "The poster features a hyper-minimalist image of the Static Car centered on a pristine white background, with extreme negative space emphasizing its innovative design. The video includes slow-motion shots highlighting the car's sleek lines and features, with a focus on the calm surroundings.",
+    "voiceover_script": "Imagine a world without accidents. The Static Car offers ultimate safety and peace of mind. Experience the future of safety - reserve your Static Car today!"
+  },
+  "total_cost": 0.47,
+  "total_elapsed": 221.1,
+  "video_generated": true,
+  "files": {
+    "poster": "poster.png",
+    "voiceover": "voiceover.mp3",
+    "bgm": "bgm.mp3",
+    "video": "ad_video.mp4"
+  }
+}

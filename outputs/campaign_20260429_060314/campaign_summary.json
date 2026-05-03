@@ -1,0 +1,36 @@
+{
+  "timestamp": "20260429_060314",
+  "product_info": {
+    "company_name": "ChoreMate Technologies",
+    "company_description": "A tech company focused on developing advanced robotic solutions for everyday tasks and companionship.",
+    "product_name": "ChoreBot",
+    "product_description": "An innovative android that not only assists with household chores but also provides companionship and emotional support, designed to enhance your daily life.",
+    "target_audience": "Tech-savvy individuals, busy professionals, and families looking for assistance in home management and companionship.",
+    "selling_points": [
+      "Dual functionality as a chore assistant and companion",
+      "Advanced AI for personalized interactions",
+      "User-friendly interface and easy integration into smart homes"
+    ],
+    "brand_colors": "#4CAF50, #FF9800, #FFFFFF",
+    "call_to_action": "Experience the future of home living - Get your ChoreBot today!",
+    "additional_info": "Available for pre-order with customizable features."
+  },
+  "preset_id": "apple",
+  "campaign_theme": {
+    "slogan": "Elevate Your Home, Enhance Your Life.",
+    "theme": "A fusion of technology and companionship, showcasing the ChoreBot as an essential part of modern living. The visuals evoke a sense of tranquility and innovation in daily life.",
+    "tone": "Calm, premium, aspirational, restrained.",
+    "color_palette": "#FFFFFF dominant, #1D1D1F charcoal type, #86868B mid-grey accents.",
+    "visual_style": "The poster features the ChoreBot centered against a pure-white background, emphasizing its sleek design with extreme negative space. Video visuals will consist of close-ups on the ChoreBot engaging in various household tasks and offering companionship, all shot with soft, directional lighting to create a serene atmosphere.",
+    "voiceover_script": "Meet your new home companion, the ChoreBot. It's time to simplify your life with advanced technology. Experience the future of home living - Get your ChoreBot today!"
+  },
+  "total_cost": 0.428,
+  "total_elapsed": 172.9,
+  "video_generated": true,
+  "files": {
+    "poster": "poster.png",
+    "voiceover": "voiceover.mp3",
+    "bgm": "bgm.mp3",
+    "video": "ad_video.mp4"
+  }
+}

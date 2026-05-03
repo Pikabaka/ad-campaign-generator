@@ -1,0 +1,36 @@
+{
+  "timestamp": "20260429_055815",
+  "product_info": {
+    "company_name": "ChoreMate Technologies",
+    "company_description": "A tech company focused on developing advanced robotic solutions for everyday tasks and companionship.",
+    "product_name": "ChoreBot",
+    "product_description": "An innovative android that not only assists with household chores but also provides companionship and emotional support, designed to enhance your daily life.",
+    "target_audience": "Tech-savvy individuals, busy professionals, and families looking for assistance in home management and companionship.",
+    "selling_points": [
+      "Dual functionality as a chore assistant and companion",
+      "Advanced AI for personalized interactions",
+      "User-friendly interface and easy integration into smart homes"
+    ],
+    "brand_colors": "#4CAF50, #FF9800, #FFFFFF",
+    "call_to_action": "Experience the future of home living - Get your ChoreBot today!",
+    "additional_info": "Available for pre-order with customizable features."
+  },
+  "preset_id": "vintage_film",
+  "campaign_theme": {
+    "slogan": "ChoreMate: Your Home's Heartbeat and Helping Hand",
+    "theme": "A warm, nostalgic journey into the future of home living. Emphasizing connection and comfort, the visuals evoke a sense of familiarity while showcasing innovation.",
+    "tone": "Nostalgic, warm, sentimental, sun-drenched",
+    "color_palette": "#D4A574, #C97B5C, #6B4423, #F4E4BC",
+    "visual_style": "The poster features soft, faded imagery reminiscent of 1970s family life, with ChoreBot interacting harmoniously with a family in a sunlit kitchen. The video captures gentle interactions over daily chores, with lens flares and light leaks enhancing the warmth and connection.",
+    "voiceover_script": "Meet ChoreBot, your perfect blend of help and heart. Transform your home with a companion that cares. Experience the future of home living - Get your ChoreBot today!"
+  },
+  "total_cost": 0.428,
+  "total_elapsed": 177.5,
+  "video_generated": true,
+  "files": {
+    "poster": "poster.png",
+    "voiceover": "voiceover.mp3",
+    "bgm": "bgm.mp3",
+    "video": "ad_video.mp4"
+  }
+}

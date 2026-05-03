@@ -1,0 +1,13 @@
+=== AD CAMPAIGN: Beater ===
+
+SLOGAN: Fight Your Way to Resolution!
+
+THEME: The campaign embodies empowerment and confidence, showcasing individuals taking control of their conflicts and celebrating their physical prowess. The visuals inspire a sense of action and determination.
+
+TONALITY: Bold, energetic, and motivational.
+
+VOICEOVER: Need a resolution? Connect with professional fighters for your disputes. Book your fighter now!
+
+COLOR PALETTE: ['#FF5733', '#C70039', '#900C3F']
+
+VISUAL STYLE: The poster features dynamic action shots of fighters in motion, contrasted with strong typography highlighting the service's benefits. The video opens with clips of intense matches, interspersed with testimonials from satisfied users, all culminating in a climactic call to action.

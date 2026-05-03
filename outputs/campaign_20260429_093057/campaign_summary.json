@@ -1,0 +1,40 @@
+{
+  "timestamp": "20260429_093057",
+  "product_info": {
+    "company_name": "Epic Fighters",
+    "company_description": "A platform that allows individuals to monetize their physical skills and services in a competitive marketplace.",
+    "product_name": "Beater",
+    "product_description": "A service that connects users with professional fighters available for hire to settle disputes or engage in competitive matches.",
+    "target_audience": "Individuals looking for conflict resolution or competitive sports enthusiasts.",
+    "selling_points": [
+      "Instant access to professional fighters",
+      "Convenient online booking system",
+      "Safe and regulated matches"
+    ],
+    "brand_colors": "#FF5733, #C70039, #900C3F",
+    "call_to_action": "Book Your Fighter Now!",
+    "additional_info": "Available in select cities with plans for nationwide expansion."
+  },
+  "preset_id": null,
+  "campaign_theme": {
+    "slogan": "Fight Your Way to Resolution!",
+    "theme": "The campaign embodies empowerment and confidence, showcasing individuals taking control of their conflicts and celebrating their physical prowess. The visuals inspire a sense of action and determination.",
+    "tone": "Bold, energetic, and motivational.",
+    "color_palette": [
+      "#FF5733",
+      "#C70039",
+      "#900C3F"
+    ],
+    "visual_style": "The poster features dynamic action shots of fighters in motion, contrasted with strong typography highlighting the service's benefits. The video opens with clips of intense matches, interspersed with testimonials from satisfied users, all culminating in a climactic call to action.",
+    "voiceover_script": "Need a resolution? Connect with professional fighters for your disputes. Book your fighter now!"
+  },
+  "total_cost": 0.428,
+  "total_elapsed": 200.5,
+  "video_generated": true,
+  "files": {
+    "poster": "poster.png",
+    "voiceover": "voiceover.mp3",
+    "bgm": "bgm.mp3",
+    "video": "ad_video.mp4"
+  }
+}

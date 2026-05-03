@@ -1,0 +1,36 @@
+{
+  "timestamp": "20260429_055330",
+  "product_info": {
+    "company_name": "ChoreMate Technologies",
+    "company_description": "A tech company focused on developing advanced robotic solutions for everyday tasks and companionship.",
+    "product_name": "ChoreBot",
+    "product_description": "An innovative android that not only assists with household chores but also provides companionship and emotional support, designed to enhance your daily life.",
+    "target_audience": "Tech-savvy individuals, busy professionals, and families looking for assistance in home management and companionship.",
+    "selling_points": [
+      "Dual functionality as a chore assistant and companion",
+      "Advanced AI for personalized interactions",
+      "User-friendly interface and easy integration into smart homes"
+    ],
+    "brand_colors": "#4CAF50, #FF9800, #FFFFFF",
+    "call_to_action": "Experience the future of home living - Get your ChoreBot today!",
+    "additional_info": "Available for pre-order with customizable features."
+  },
+  "preset_id": "cyberpunk",
+  "campaign_theme": {
+    "slogan": "Transform Your Home, Elevate Your Life.",
+    "theme": "A vibrant blend of technology and companionship, showcasing a futuristic lifestyle where ChoreBot seamlessly integrates into daily routines. The atmosphere captures a sense of urban excitement and the comfort of home.",
+    "tone": "Edgy, futuristic, and electric.",
+    "color_palette": "#FF00FF, #00FFFF, #0A0014, #FFD700",
+    "visual_style": "The poster features a sleek ChoreBot illuminated against a rain-soaked cyberpunk cityscape, with neon lights reflecting off the asphalt. The video showcases dynamic angles of the ChoreBot in action, performing tasks while interacting warmly with family members, set to a pulsating electronic soundtrack.",
+    "voiceover_script": "Meet your new best friend and household hero. ChoreBot: where chores meet companionship. Experience the future of home living - Get your ChoreBot today!"
+  },
+  "total_cost": 0.428,
+  "total_elapsed": 192.3,
+  "video_generated": true,
+  "files": {
+    "poster": "poster.png",
+    "voiceover": "voiceover.mp3",
+    "bgm": "bgm.mp3",
+    "video": "ad_video.mp4"
+  }
+}

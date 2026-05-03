@@ -1,0 +1,38 @@
+{
+  "timestamp": "20260428_160509",
+  "product_info": {
+    "company_name": "McDonald's",
+    "company_description": "The world's leading global foodservice retailer, serving millions of customers daily with quality, fast, and convenient food.",
+    "product_name": "Mushroom Swiss Burger",
+    "product_description": "A juicy 100% beef patty topped with savory sauteed mushrooms, melted Swiss cheese, crispy onions, and our signature sauce on a toasted sesame seed bun.",
+    "target_audience": "Adults 18-45 who appreciate premium burger flavors, foodies looking for a gourmet fast-food experience, and mushroom lovers",
+    "selling_points": [
+      "Made with 100% pure beef, never frozen",
+      "Real sauteed mushrooms with garlic and herbs",
+      "Premium Swiss cheese, not processed American",
+      "Limited-time offering - available only for a short time"
+    ],
+    "brand_colors": "#FFC72C, #DA291C, #27251F",
+    "call_to_action": "Try it today at your local McDonald's or order on the app!",
+    "additional_info": "Emphasize the gourmet, premium quality of the burger. The mood should feel warm, appetizing, and crave-worthy. Highlight the melting Swiss cheese and sizzling mushrooms."
+  },
+  "preset_id": "apple",
+  "campaign_theme": {
+    "slogan": "(slogan was generated but not saved \u2014 recovered campaign)",
+    "theme": "(recovered \u2014 Kling video step hung before summary was written)",
+    "tone": "Calm, premium, aspirational",
+    "color_palette": "#FFFFFF, #1D1D1F, #86868B",
+    "visual_style": "Apple Minimalist preset",
+    "voiceover_script": "(audio file present in folder)"
+  },
+  "total_cost": 0.078,
+  "total_elapsed": 0,
+  "video_generated": false,
+  "files": {
+    "poster": "poster.png",
+    "voiceover": "voiceover.mp3",
+    "bgm": "bgm.mp3",
+    "video": null
+  },
+  "recovered": true
+}

@@ -1,0 +1,39 @@
+{
+  "timestamp": "20260429_052944",
+  "product_info": {
+    "company_name": "Huawei Harmony\u2122 Civil Solutions",
+    "company_description": "A proud subsidiary of the People's Digital Future, dedicated to building a more \u548c\u8c10 (harmonious) information environment, one redirected DNS query at a time. Trusted by 1.4 billion deeply satisfied customers since 1998.",
+    "product_name": "GreatWall Pro 5G+ \u2014 The People's Browser Companion",
+    "product_description": "An all-in-one network optimization solution that gently filters away unnecessary information so users can focus on what truly matters. Now with HarmonyEye AI co-pilot \u2014 automatically reports lifestyle anomalies to your local community service worker before you even know you have them. Comes pre-installed in every device sold north of the 36th parallel.",
+    "target_audience": "Forward-thinking citizens aged 0-99 who value stability, harmony, and never having to make difficult choices about what to read. Also: export markets seeking 'turnkey civic infrastructure' and Western universities running ethics seminars (free demo unit available).",
+    "selling_points": [
+      "99.99% uptime \u2014 your VPN's downtime, guaranteed",
+      "Real-time sentiment scoring: know how loyal you feel, before you do",
+      "Auto-translation feature: 'protest' becomes 'gathering of friends'",
+      "Family Plan: parents get notified when junior googles Tiananmen homework",
+      "Compliant with all current and future regulations (we wrote them)",
+      "Now with cross-border export mode \u2014 democracy not included"
+    ],
+    "brand_colors": "#DE2910, #FFDE00, #000000, #C0C0C0",
+    "call_to_action": "Embrace harmony. Upgrade today \u2014 it's not optional anyway.",
+    "additional_info": "Tone: corporate cheerful but with deeply uncomfortable subtext. Imagine an Apple keynote crossed with a 1984 Ministry of Truth pamphlet. Visual style: glossy product photography of sleek black surveillance hardware against red-and-gold geometric backgrounds, smiling stock-photo families using devices with subtle red-tint overlays, smug corporate confidence. Slogan should sound aspirational on the surface but make the audience laugh nervously."
+  },
+  "preset_id": "apple",
+  "campaign_theme": {
+    "slogan": "Harmonize Your Browsing, Simplify Your Choices",
+    "theme": "A seamless blend of technology and tranquility, reflecting a future where information is curated for clarity and harmony. This campaign illustrates a world where every digital interaction is effortlessly refined.",
+    "tone": "corporate cheerful with unsettling undertones",
+    "color_palette": "#DE2910, #FFDE00, #000000, #C0C0C0",
+    "visual_style": "The poster features the GreatWall Pro 5G+ prominently in the center against a stark white backdrop, radiating an aura of premium quality. The video visuals alternate between sleek close-ups of the device in use by content families and abstract shots of smooth, red-and-gold geometric patterns that evoke a sense of control and certainty.",
+    "voiceover_script": "Discover a browsing experience that shapes your reality. Let GreatWall Pro 5G+ streamline your digital life. Embrace harmony. Upgrade today \u2014 it's not optional anyway."
+  },
+  "total_cost": 0.428,
+  "total_elapsed": 177.5,
+  "video_generated": true,
+  "files": {
+    "poster": "poster.png",
+    "voiceover": "voiceover.mp3",
+    "bgm": "bgm.mp3",
+    "video": "ad_video.mp4"
+  }
+}

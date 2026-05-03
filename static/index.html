@@ -1,0 +1,1025 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>AI Ad Campaign Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.5/dist/cdn.min.js"></script>
+<style>
+  :root {
+    --bg-0: #07060d;
+    --bg-1: #0d0a1f;
+    --accent-1: #7c3aed; /* violet */
+    --accent-2: #06b6d4; /* cyan */
+    --accent-3: #ec4899; /* pink */
+  }
+  html, body { background: var(--bg-0); color: #e5e7eb; font-family: 'Inter', system-ui, sans-serif; }
+  body { overflow-x: hidden; }
+  .font-serif { font-family: 'Playfair Display', serif; }
+  .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+  /* Animated background */
+  .bg-canvas { position: fixed; inset: 0; z-index: -2; pointer-events: none; }
+  .bg-noise {
+    position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: .04;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  .glass {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+  }
+  .glass-strong {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+  }
+
+  .gradient-text {
+    background: linear-gradient(120deg, #fff 0%, #c4b5fd 30%, #67e8f9 60%, #f0abfc 100%);
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shine 8s linear infinite;
+  }
+  @keyframes shine { 0%{background-position:0% 50%} 100%{background-position:300% 50%} }
+
+  .btn-glow {
+    position: relative;
+    background: linear-gradient(120deg, var(--accent-1), var(--accent-3), var(--accent-2));
+    background-size: 200% 200%;
+    animation: btnshift 6s ease infinite;
+    transition: transform .18s ease, box-shadow .18s ease;
+    box-shadow: 0 10px 40px -10px rgba(124,58,237,.6), 0 0 50px -15px rgba(236,72,153,.5);
+  }
+  .btn-glow:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 18px 60px -10px rgba(124,58,237,.85), 0 0 80px -10px rgba(236,72,153,.7); }
+  .btn-glow:disabled { opacity: .55; cursor: not-allowed; transform: none; animation: none; }
+  @keyframes btnshift { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+
+  .preset-card {
+    transition: all .25s cubic-bezier(.2,.7,.2,1);
+    transform-style: preserve-3d;
+  }
+  .preset-card:hover { transform: translateY(-4px) scale(1.03); }
+  .preset-card.selected {
+    transform: translateY(-4px) scale(1.04);
+    box-shadow: 0 0 0 2px rgba(255,255,255,.5), 0 18px 50px -10px rgba(124,58,237,.55);
+  }
+
+  /* Step row */
+  .step-row { transition: all .35s ease; }
+  .step-pulse {
+    box-shadow: 0 0 0 0 rgba(124,58,237,.55);
+    animation: pulsing 1.6s infinite;
+  }
+  @keyframes pulsing {
+    0% { box-shadow: 0 0 0 0 rgba(124,58,237,.6); }
+    70% { box-shadow: 0 0 0 14px rgba(124,58,237,0); }
+    100% { box-shadow: 0 0 0 0 rgba(124,58,237,0); }
+  }
+  .spinner {
+    width: 16px; height: 16px; border-radius: 50%;
+    border: 2px solid rgba(255,255,255,.18);
+    border-top-color: #c4b5fd;
+    animation: spin 0.9s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .reveal {
+    opacity: 0; transform: translateY(20px);
+    animation: revealUp .6s cubic-bezier(.2,.7,.2,1) forwards;
+  }
+  @keyframes revealUp { to { opacity: 1; transform: translateY(0); } }
+
+  /* iPhone mockup */
+  .iphone {
+    width: 230px; height: 470px; border-radius: 36px;
+    background: #111;
+    padding: 11px;
+    box-shadow:
+      0 0 0 2px #2a2a2a,
+      0 0 0 11px #0c0c0c,
+      0 30px 60px -10px rgba(0,0,0,.7),
+      0 0 50px -10px rgba(124,58,237,.35);
+    position: relative;
+  }
+  .iphone::before {
+    content: ""; position: absolute; top: 13px; left: 50%; transform: translateX(-50%);
+    width: 100px; height: 26px; border-radius: 16px; background: #000; z-index: 2;
+  }
+  .iphone-screen { width: 100%; height: 100%; border-radius: 26px; overflow: hidden; position: relative; }
+
+  /* Instagram post mockup */
+  .ig-mockup {
+    width: 300px; margin: 0 auto;
+    background: #fff; color: #262626;
+    border-radius: 12px; overflow: hidden;
+    box-shadow: 0 30px 60px -10px rgba(0,0,0,.6), 0 0 50px -10px rgba(236,72,153,.25);
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+  }
+  .ig-header { display: flex; align-items: center; padding: 10px 12px; gap: 10px; }
+  .ig-avatar {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: linear-gradient(45deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5);
+    padding: 2px; box-sizing: border-box; flex-shrink: 0;
+    position: relative;
+  }
+  .ig-avatar-inner {
+    width: 100%; height: 100%; border-radius: 50%;
+    background: #fff; display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; color: #262626;
+  }
+  .ig-username { font-weight: 600; font-size: 13px; flex: 1; line-height: 1; }
+  .ig-username-sub { font-size: 11px; color: #8e8e8e; margin-top: 2px; }
+  .ig-more { color: #262626; font-size: 16px; }
+  .ig-image { width: 100%; aspect-ratio: 1/1; object-fit: cover; display: block; }
+  .ig-actions {
+    display: flex; align-items: center; gap: 14px; padding: 9px 12px 6px; font-size: 22px;
+  }
+  .ig-actions .spacer { flex: 1; }
+  .ig-likes { padding: 0 12px 4px; font-size: 13px; font-weight: 600; }
+  .ig-caption { padding: 0 12px 12px; font-size: 13px; line-height: 1.4; }
+  .ig-caption strong { font-weight: 600; }
+  .ig-caption .hash { color: #00376b; }
+
+  /* Desktop browser mockup */
+  .browser-mockup {
+    width: 100%; max-width: 460px; margin: 0 auto;
+    background: #1c1c1e;
+    border-radius: 12px; overflow: hidden;
+    box-shadow: 0 30px 60px -10px rgba(0,0,0,.7), 0 0 50px -10px rgba(6,182,212,.25);
+    border: 1px solid rgba(255,255,255,.08);
+  }
+  .browser-bar {
+    display: flex; align-items: center; padding: 10px 12px; gap: 8px;
+    background: #2a2a2c; border-bottom: 1px solid rgba(255,255,255,.06);
+  }
+  .browser-dots { display: flex; gap: 6px; }
+  .browser-dots .dot { width: 11px; height: 11px; border-radius: 50%; }
+  .browser-dots .dot.red { background: #FF5F57; }
+  .browser-dots .dot.yellow { background: #FEBC2E; }
+  .browser-dots .dot.green { background: #28C840; }
+  .browser-url {
+    margin-left: 10px; flex: 1;
+    background: rgba(255,255,255,.07); border-radius: 6px;
+    padding: 4px 12px; font-size: 11px;
+    color: rgba(255,255,255,.55); font-family: 'JetBrains Mono', monospace;
+    text-align: center;
+  }
+  .browser-url::before { content: "🔒  "; opacity: .55; }
+  .browser-content { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; }
+
+  /* Slogan typewriter */
+  .typewriter {
+    display: inline-block;
+    border-right: 3px solid #c4b5fd;
+    animation: caret 0.8s steps(2) infinite;
+  }
+  @keyframes caret { 50% { border-color: transparent; } }
+
+  /* Smooth tab indicator */
+  .tab-active { background: linear-gradient(120deg, rgba(124,58,237,.25), rgba(236,72,153,.25)); border-color: rgba(255,255,255,.35); }
+
+  /* Toast */
+  .toast { animation: toastIn .3s ease; }
+  @keyframes toastIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Scrollbars */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: #0a0814; }
+  ::-webkit-scrollbar-thumb { background: linear-gradient(#3b1d6b,#1d1240); border-radius: 6px; }
+
+  /* Color swatch */
+  .swatch { width: 28px; height: 28px; border-radius: 6px; border: 1px solid rgba(255,255,255,.15); display:inline-block; }
+</style>
+</head>
+<body x-data="studio()" x-init="init()">
+
+<canvas class="bg-canvas" id="bgCanvas"></canvas>
+<div class="bg-noise"></div>
+
+<!-- TOP BAR -->
+<header class="sticky top-0 z-50 glass-strong border-b border-white/10">
+  <div class="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-xl btn-glow flex items-center justify-center text-lg">✨</div>
+      <div>
+        <div class="font-bold text-sm tracking-wide">AD CAMPAIGN STUDIO</div>
+        <div class="text-[11px] text-white/50 -mt-0.5 font-mono">FA690 · Creativity Olympics</div>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <!-- Cost counter -->
+      <div class="glass px-3 py-1.5 rounded-full flex items-center gap-2 text-xs font-mono">
+        <span class="text-emerald-300">●</span>
+        <span class="text-white/70">cost</span>
+        <span class="text-white font-semibold" x-text="'$' + cost.toFixed(3)"></span>
+      </div>
+
+      <!-- Health -->
+      <div class="glass px-3 py-1.5 rounded-full text-xs font-mono"
+           :class="health.keys_present ? 'text-emerald-300' : 'text-rose-300'">
+        <span x-text="health.keys_present ? '● API ready' : '● No API keys'"></span>
+      </div>
+
+      <!-- Demo mode toggle -->
+      <button @click="demoMode = !demoMode"
+              class="glass px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2 transition"
+              :class="demoMode ? 'bg-fuchsia-500/30 border-fuchsia-400/50' : ''">
+        <span class="w-7 h-4 rounded-full relative transition" :class="demoMode ? 'bg-fuchsia-500' : 'bg-white/20'">
+          <span class="absolute top-0.5 w-3 h-3 rounded-full bg-white transition" :class="demoMode ? 'left-3.5' : 'left-0.5'"></span>
+        </span>
+        <span x-text="demoMode ? 'Demo Mode' : 'Live Mode'"></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="relative max-w-7xl mx-auto px-6 pt-16 pb-12 text-center">
+  <div class="text-[11px] uppercase tracking-[0.4em] text-white/50 mb-4 font-mono">Generative · Multimodal · Real-time</div>
+  <h1 class="font-serif text-5xl md:text-7xl font-black leading-tight gradient-text">
+    Turn a Product Brief<br/>Into a Full Campaign.
+  </h1>
+  <p class="mt-6 text-white/60 max-w-2xl mx-auto text-lg">
+    Slogan, poster, voiceover, soundtrack, video — generated in one click.
+    Pick a style, hit the button, watch it happen.
+  </p>
+</section>
+
+<!-- DEMO MODE: gallery of pre-rendered cases -->
+<section x-show="demoMode" class="max-w-7xl mx-auto px-6 mb-20" x-transition>
+  <div class="flex items-center justify-between mb-4">
+    <div>
+      <h2 class="text-2xl font-bold">Demo Cases</h2>
+      <p class="text-white/50 text-sm">Pre-rendered campaigns. Click any card to view the full output instantly.</p>
+    </div>
+  </div>
+  <template x-if="demoCases.length === 0">
+    <div class="glass rounded-2xl p-10 text-center text-white/50">
+      No demo cases yet. Run a campaign in Live Mode and it'll appear in the gallery below.
+    </div>
+  </template>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+    <template x-for="c in demoCases" :key="c.id">
+      <div class="glass rounded-2xl overflow-hidden cursor-pointer hover:scale-[1.015] transition" @click="loadCampaign(c, true)">
+        <img :src="'/' + c.poster" class="w-full h-64 object-cover" loading="lazy" />
+        <div class="p-4">
+          <div class="text-xs text-white/40 font-mono uppercase tracking-wider" x-text="c.preset_id || 'custom'"></div>
+          <div class="font-semibold mt-1" x-text="c.product_name"></div>
+          <div class="text-sm text-white/60 italic mt-1" x-text="'“' + (c.slogan || '') + '”'"></div>
+        </div>
+      </div>
+    </template>
+  </div>
+</section>
+
+<!-- LIVE MODE: input panel -->
+<section x-show="!demoMode" class="max-w-7xl mx-auto px-6 grid lg:grid-cols-5 gap-6 mb-12">
+  <!-- LEFT: input form -->
+  <div class="lg:col-span-3 space-y-5">
+    <!-- Quick prompt -->
+    <div class="glass rounded-2xl p-5">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="font-semibold text-sm tracking-wide">⚡ QUICK BRIEF</h3>
+        <span class="text-xs text-white/40">Paste any product description, AI fills the form</span>
+      </div>
+      <textarea x-model="quickText" rows="2" placeholder="e.g. A small Brooklyn coffee roaster launching a single-origin Ethiopian espresso for design-conscious millennials..."
+                class="w-full bg-black/30 border border-white/10 rounded-xl p-3 text-sm focus:outline-none focus:border-fuchsia-400/60 placeholder-white/30"></textarea>
+      <button @click="extractFromQuick()"
+              :disabled="!quickText.trim() || extracting"
+              class="mt-3 px-4 py-2 rounded-lg text-sm font-semibold glass-strong border-fuchsia-400/40 hover:bg-fuchsia-500/20 transition disabled:opacity-50">
+        <span x-show="!extracting">✨ Auto-fill brief</span>
+        <span x-show="extracting">Extracting…</span>
+      </button>
+    </div>
+
+    <!-- Manual form -->
+    <div class="glass rounded-2xl p-5">
+      <h3 class="font-semibold text-sm tracking-wide mb-4">📋 PRODUCT BRIEF</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+        <label class="block">
+          <span class="text-white/50 text-xs">Company</span>
+          <input x-model="product.company_name" class="w-full mt-1 bg-black/30 border border-white/10 rounded-lg px-3 py-2 focus:outline-none focus:border-fuchsia-400/60" />
+        </label>
+        <label class="block">
+          <span class="text-white/50 text-xs">Product</span>
+          <input x-model="product.product_name" class="w-full mt-1 bg-black/30 border border-white/10 rounded-lg px-3 py-2 focus:outline-none focus:border-fuchsia-400/60" />
+        </label>
+        <label class="block md:col-span-2">
+          <span class="text-white/50 text-xs">Company description</span>
+          <input x-model="product.company_description" class="w-full mt-1 bg-black/30 border border-white/10 rounded-lg px-3 py-2 focus:outline-none focus:border-fuchsia-400/60" />
+        </label>
+        <label class="block md:col-span-2">
+          <span class="text-white/50 text-xs">Product description</span>
+          <textarea x-model="product.product_description" rows="2" class="w-full mt-1 bg-black/30 border border-white/10 rounded-lg px-3 py-2 focus:outline-none focus:border-fuchsia-400/60"></textarea>
+        </label>
+        <label class="block md:col-span-2">
+          <span class="text-white/50 text-xs">Target audience</span>
+          <input x-model="product.target_audience" class="w-full mt-1 bg-black/30 border border-white/10 rounded-lg px-3 py-2 focus:outline-none focus:border-fuchsia-400/60" />
+        </label>
+        <label class="block md:col-span-2">
+          <span class="text-white/50 text-xs">Selling points (one per line)</span>
+          <textarea :value="product.selling_points.join('\n')" @input="product.selling_points = $event.target.value.split('\n').filter(x=>x.trim())"
+                    rows="3" class="w-full mt-1 bg-black/30 border border-white/10 rounded-lg px-3 py-2 focus:outline-none focus:border-fuchsia-400/60"></textarea>
+        </label>
+        <label class="block">
+          <span class="text-white/50 text-xs">Brand colors</span>
+          <input x-model="product.brand_colors" class="w-full mt-1 bg-black/30 border border-white/10 rounded-lg px-3 py-2 focus:outline-none focus:border-fuchsia-400/60" />
+        </label>
+        <label class="block">
+          <span class="text-white/50 text-xs">Call to action</span>
+          <input x-model="product.call_to_action" class="w-full mt-1 bg-black/30 border border-white/10 rounded-lg px-3 py-2 focus:outline-none focus:border-fuchsia-400/60" />
+        </label>
+        <label class="block md:col-span-2">
+          <span class="text-white/50 text-xs">Additional notes (optional)</span>
+          <input x-model="product.additional_info" class="w-full mt-1 bg-black/30 border border-white/10 rounded-lg px-3 py-2 focus:outline-none focus:border-fuchsia-400/60" />
+        </label>
+      </div>
+    </div>
+
+    <!-- Style presets -->
+    <div class="glass rounded-2xl p-5">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="font-semibold text-sm tracking-wide">🎨 STYLE PRESET</h3>
+        <button x-show="selectedPreset" @click="selectedPreset = null" class="text-xs text-white/50 hover:text-white">clear</button>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <template x-for="p in presets" :key="p.id">
+          <div @click="selectedPreset = (selectedPreset === p.id ? null : p.id)"
+               class="preset-card glass rounded-xl p-3 cursor-pointer text-center"
+               :class="selectedPreset === p.id ? 'selected' : ''">
+            <div class="h-20 rounded-lg mb-2 bg-gradient-to-br" :class="'bg-gradient-to-br ' + p.gradient">
+              <div class="h-full flex items-center justify-center text-3xl" x-text="p.emoji"></div>
+            </div>
+            <div class="font-semibold text-xs" x-text="p.name"></div>
+            <div class="text-[10px] text-white/40 mt-0.5" x-text="p.tone.split(',')[0]"></div>
+          </div>
+        </template>
+      </div>
+    </div>
+
+    <!-- Generate button -->
+    <div class="text-center pt-2">
+      <button @click="startGenerate()"
+              :disabled="generating || !canGenerate()"
+              class="btn-glow px-12 py-5 rounded-2xl font-bold text-lg tracking-wide">
+        <span x-show="!generating">⚡ GENERATE CAMPAIGN</span>
+        <span x-show="generating" class="flex items-center gap-3">
+          <span class="spinner"></span> generating…
+        </span>
+      </button>
+      <div class="text-xs text-white/40 mt-3 font-mono" x-text="canGenerate() ? '~$0.42 per run · 3-7 min' : 'Fill the brief and pick (or skip) a style preset'"></div>
+    </div>
+  </div>
+
+  <!-- RIGHT: progress timeline (sticky) -->
+  <div class="lg:col-span-2">
+    <div class="glass rounded-2xl p-5 sticky top-24">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="font-semibold text-sm tracking-wide">⏱ PIPELINE</h3>
+        <span class="text-xs font-mono text-white/40" x-text="elapsedLabel"></span>
+      </div>
+      <div class="space-y-2">
+        <template x-for="s in steps" :key="s.id">
+          <div class="step-row glass rounded-lg p-3 flex items-center gap-3"
+               :class="{ 'step-pulse': s.status === 'running', 'opacity-40': s.status === 'pending' }">
+            <div class="w-7 h-7 rounded-full flex items-center justify-center text-sm shrink-0"
+                 :class="{
+                   'bg-emerald-500/30 text-emerald-300': s.status === 'done',
+                   'bg-fuchsia-500/30 text-fuchsia-200': s.status === 'running',
+                   'bg-rose-500/30 text-rose-200': s.status === 'error',
+                   'bg-white/10 text-white/40': s.status === 'pending'
+                 }">
+              <span x-show="s.status === 'done'">✓</span>
+              <span x-show="s.status === 'running'" class="spinner"></span>
+              <span x-show="s.status === 'pending'" x-text="s.icon"></span>
+              <span x-show="s.status === 'error'">✕</span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="text-sm font-medium truncate" x-text="s.label"></div>
+              <div class="text-[10px] text-white/40 font-mono" x-text="(s.elapsed ? s.elapsed + 's' : '') + (s.cost ? '  ·  $' + s.cost.toFixed(3) : '')"></div>
+            </div>
+          </div>
+        </template>
+      </div>
+      <div class="mt-4 pt-4 border-t border-white/10">
+        <div class="flex items-baseline justify-between">
+          <span class="text-xs text-white/50 uppercase tracking-wider">Total</span>
+          <span class="font-mono text-2xl font-bold gradient-text" x-text="'$' + cost.toFixed(3)"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OUTPUT STAGE -->
+<section class="max-w-7xl mx-auto px-6 space-y-8 pb-16" x-show="hasOutput()">
+
+  <!-- Slogan -->
+  <div x-show="output.slogan" class="reveal text-center py-10 glass-strong rounded-3xl">
+    <div class="text-[11px] uppercase tracking-[0.4em] text-white/40 font-mono mb-4">THE SLOGAN</div>
+    <div class="font-serif text-4xl md:text-6xl italic leading-tight px-8">
+      <span class="gradient-text">“<span x-text="typedSlogan"></span><span class="typewriter" x-show="typing"></span>”</span>
+    </div>
+    <div class="mt-4 text-white/50" x-text="output.tone"></div>
+  </div>
+
+  <!-- Poster (original + tabs) -->
+  <div x-show="output.poster" class="reveal glass-strong rounded-3xl p-5">
+    <div class="text-[11px] uppercase tracking-[0.4em] text-white/40 font-mono mb-3">PRINT POSTER</div>
+    <div class="flex gap-2 mb-4 flex-wrap">
+      <button @click="posterTab='original'" class="px-3 py-1.5 rounded-lg text-xs glass" :class="posterTab==='original' ? 'tab-active' : ''">Original</button>
+      <button @click="posterTab='ig_square'" class="px-3 py-1.5 rounded-lg text-xs glass" :class="posterTab==='ig_square' ? 'tab-active' : ''">1:1 Square</button>
+      <button @click="posterTab='ig_story'" class="px-3 py-1.5 rounded-lg text-xs glass" :class="posterTab==='ig_story' ? 'tab-active' : ''">9:16 Story</button>
+      <button @click="posterTab='wide'" class="px-3 py-1.5 rounded-lg text-xs glass" :class="posterTab==='wide' ? 'tab-active' : ''">16:9 Wide</button>
+    </div>
+    <div class="flex justify-center">
+      <img :src="currentPosterUrl()" class="rounded-xl max-h-[600px] object-contain shadow-2xl" />
+    </div>
+  </div>
+
+  <!-- Multi-platform device mockups -->
+  <div x-show="output.poster" class="reveal glass rounded-3xl p-6">
+    <div class="text-[11px] uppercase tracking-[0.4em] text-white/40 font-mono mb-5 text-center">SEEING IT ACROSS PLATFORMS</div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+      <!-- Instagram square post -->
+      <div class="flex flex-col items-center">
+        <div class="text-xs uppercase tracking-wider text-white/50 font-mono mb-4">📸 Instagram Post · 1:1</div>
+        <div class="ig-mockup">
+          <div class="ig-header">
+            <div class="ig-avatar">
+              <div class="ig-avatar-inner" x-text="(product.company_name || '?')[0]?.toUpperCase()"></div>
+            </div>
+            <div class="flex-1">
+              <div class="ig-username" x-text="(product.company_name || 'brand').toLowerCase().replace(/[^a-z0-9]+/g,'')"></div>
+              <div class="ig-username-sub">Sponsored</div>
+            </div>
+            <div class="ig-more">⋯</div>
+          </div>
+          <img :src="output.sizes?.ig_square || output.poster" class="ig-image" />
+          <div class="ig-actions">
+            <span>♡</span><span>💬</span><span>📤</span>
+            <span class="spacer"></span>
+            <span>🔖</span>
+          </div>
+          <div class="ig-likes">12,847 likes</div>
+          <div class="ig-caption">
+            <strong x-text="(product.company_name || 'brand').toLowerCase().replace(/[^a-z0-9]+/g,'')"></strong>
+            <span x-text="' ' + (output.slogan || '')"></span>
+            <span class="hash" x-text="' #' + (product.product_name || '').replace(/\\s+/g,'').toLowerCase() + ' #ad'"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- iPhone 9:16 -->
+      <div class="flex flex-col items-center">
+        <div class="text-xs uppercase tracking-wider text-white/50 font-mono mb-4">📱 IG Story / Reels · 9:16</div>
+        <div class="iphone">
+          <div class="iphone-screen">
+            <img :src="output.sizes?.ig_story || output.poster" class="w-full h-full object-cover" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Desktop browser 16:9 -->
+      <div class="flex flex-col items-center">
+        <div class="text-xs uppercase tracking-wider text-white/50 font-mono mb-4">💻 Desktop / YouTube · 16:9</div>
+        <div class="browser-mockup">
+          <div class="browser-bar">
+            <div class="browser-dots">
+              <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+            </div>
+            <div class="browser-url" x-text="(product.company_name || 'brand').toLowerCase().replace(/[^a-z0-9]+/g,'') + '.com'"></div>
+          </div>
+          <img :src="output.sizes?.wide || output.poster" class="browser-content" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Audio -->
+  <div x-show="output.voiceover || output.bgm" class="reveal grid md:grid-cols-2 gap-6">
+    <div x-show="output.voiceover" class="glass-strong rounded-3xl p-5">
+      <div class="text-[11px] uppercase tracking-[0.4em] text-white/40 font-mono mb-3">🎙 VOICEOVER</div>
+      <p class="text-white/70 italic mb-4" x-text="output.voiceover_script"></p>
+      <audio :src="output.voiceover" controls class="w-full"></audio>
+    </div>
+    <div x-show="output.bgm" class="glass-strong rounded-3xl p-5">
+      <div class="text-[11px] uppercase tracking-[0.4em] text-white/40 font-mono mb-3">🎵 SOUNDTRACK</div>
+      <p class="text-white/70 mb-4" x-text="presetMusicGenre()"></p>
+      <audio :src="output.bgm" controls class="w-full"></audio>
+    </div>
+  </div>
+
+  <!-- Video -->
+  <div x-show="output.video" class="reveal glass-strong rounded-3xl p-5">
+    <div class="text-[11px] uppercase tracking-[0.4em] text-white/40 font-mono mb-3">🎬 10-SECOND AD</div>
+    <div class="flex justify-center">
+      <video :src="output.video" controls class="rounded-xl max-h-[520px]"></video>
+    </div>
+  </div>
+
+  <!-- Theme details -->
+  <div x-show="output.theme_full" class="reveal glass rounded-3xl p-6">
+    <div class="text-[11px] uppercase tracking-[0.4em] text-white/40 font-mono mb-4">🎨 CREATIVE DIRECTION</div>
+    <div class="grid md:grid-cols-2 gap-5 text-sm">
+      <div>
+        <div class="text-white/40 text-xs uppercase">Theme</div>
+        <div class="mt-1" x-text="output.theme_full?.theme"></div>
+      </div>
+      <div>
+        <div class="text-white/40 text-xs uppercase">Visual Style</div>
+        <div class="mt-1" x-text="output.theme_full?.visual_style"></div>
+      </div>
+      <div>
+        <div class="text-white/40 text-xs uppercase">Tone</div>
+        <div class="mt-1" x-text="output.theme_full?.tone"></div>
+      </div>
+      <div>
+        <div class="text-white/40 text-xs uppercase">Palette</div>
+        <div class="mt-2 flex flex-wrap gap-2 items-center">
+          <template x-for="hex in extractHexes(output.theme_full?.color_palette + ' ' + product.brand_colors)" :key="hex">
+            <span class="flex items-center gap-1.5">
+              <span class="swatch" :style="'background:' + hex"></span>
+              <span class="font-mono text-xs text-white/60" x-text="hex"></span>
+            </span>
+          </template>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div x-show="completed" class="reveal flex flex-wrap gap-3 justify-center pt-4">
+    <button @click="exportPdf()" :disabled="exportingPdf"
+            class="px-6 py-3 rounded-xl font-semibold glass-strong border-fuchsia-400/40 hover:bg-fuchsia-500/20 transition disabled:opacity-60">
+      <span x-show="!exportingPdf">📄 Export Pitch Deck (PDF)</span>
+      <span x-show="exportingPdf">Building PDF…</span>
+    </button>
+    <button @click="loadGallery()" class="px-6 py-3 rounded-xl font-semibold glass">💾 Refresh Gallery</button>
+  </div>
+</section>
+
+<!-- HISTORY GALLERY -->
+<section class="max-w-7xl mx-auto px-6 pb-24" x-show="!demoMode">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-2xl font-bold">History</h2>
+    <button @click="loadGallery()" class="text-xs text-white/50 hover:text-white">refresh</button>
+  </div>
+  <template x-if="gallery.length === 0">
+    <div class="glass rounded-2xl p-10 text-center text-white/40">
+      No campaigns yet. Generate your first above ↑
+    </div>
+  </template>
+  <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+    <template x-for="c in gallery" :key="c.id">
+      <div class="glass rounded-xl overflow-hidden cursor-pointer hover:scale-[1.02] transition" @click="loadCampaign(c, false)">
+        <img :src="'/' + c.poster" class="w-full h-44 object-cover" loading="lazy" />
+        <div class="p-3">
+          <div class="text-xs text-white/40 font-mono uppercase truncate" x-text="c.preset_id || 'custom'"></div>
+          <div class="text-sm font-semibold mt-0.5 truncate" x-text="c.product_name"></div>
+        </div>
+      </div>
+    </template>
+  </div>
+</section>
+
+<!-- TOAST -->
+<div x-show="toast" class="fixed bottom-6 right-6 z-50 toast">
+  <div class="glass-strong px-5 py-3 rounded-xl text-sm" x-text="toast"></div>
+</div>
+
+<footer class="border-t border-white/5 py-8 text-center text-white/30 text-xs font-mono">
+  AI Ad Campaign Studio · GPT-4o-mini + gpt-image-1 + tts-1 + Cassette music + Kling video
+</footer>
+
+<script>
+  // ----- background canvas: drifting gradient blobs ----------------------
+  (() => {
+    const c = document.getElementById('bgCanvas');
+    const ctx = c.getContext('2d');
+    let w, h, blobs;
+    const COLORS = ['rgba(124,58,237,0.55)','rgba(236,72,153,0.45)','rgba(6,182,212,0.45)','rgba(16,185,129,0.30)'];
+    function resize() {
+      w = c.width = window.innerWidth;
+      h = c.height = window.innerHeight;
+      blobs = Array.from({length: 5}, (_, i) => ({
+        x: Math.random()*w, y: Math.random()*h,
+        vx: (Math.random()-.5)*0.3, vy: (Math.random()-.5)*0.3,
+        r: 280 + Math.random()*220,
+        c: COLORS[i % COLORS.length],
+      }));
+    }
+    function frame() {
+      ctx.clearRect(0,0,w,h);
+      ctx.globalCompositeOperation = 'screen';
+      blobs.forEach(b => {
+        b.x += b.vx; b.y += b.vy;
+        if (b.x < -b.r) b.x = w + b.r;
+        if (b.x > w + b.r) b.x = -b.r;
+        if (b.y < -b.r) b.y = h + b.r;
+        if (b.y > h + b.r) b.y = -b.r;
+        const grad = ctx.createRadialGradient(b.x,b.y,0,b.x,b.y,b.r);
+        grad.addColorStop(0, b.c);
+        grad.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, b.r, 0, Math.PI*2);
+        ctx.fill();
+      });
+      requestAnimationFrame(frame);
+    }
+    window.addEventListener('resize', resize);
+    resize(); frame();
+  })();
+
+  // ----- Alpine root -----------------------------------------------------
+  function studio() {
+    return {
+      // Health / config
+      health: { keys_present: false, ffmpeg: false },
+
+      // Mode
+      demoMode: false,
+
+      // Product brief
+      product: {
+        company_name: "", company_description: "",
+        product_name: "", product_description: "",
+        target_audience: "", selling_points: [],
+        brand_colors: "", call_to_action: "", additional_info: ""
+      },
+      quickText: "",
+      extracting: false,
+
+      // Style presets
+      presets: [],
+      presetDetails: {},
+      selectedPreset: null,
+
+      // Pipeline
+      generating: false,
+      completed: false,
+      cost: 0,
+      startedAt: null,
+      elapsedLabel: "",
+      _elapsedTimer: null,
+
+      steps: [
+        { id: "slogan",  icon: "✏️", label: "Slogan & theme",     status: "pending", elapsed: 0, cost: 0 },
+        { id: "poster",  icon: "🖼", label: "Poster (gpt-image-1)", status: "pending", elapsed: 0, cost: 0 },
+        { id: "tts",     icon: "🎙", label: "Voiceover",            status: "pending", elapsed: 0, cost: 0 },
+        { id: "bgm",     icon: "🎵", label: "Soundtrack",           status: "pending", elapsed: 0, cost: 0 },
+        { id: "social",  icon: "📱", label: "Social variants",     status: "pending", elapsed: 0, cost: 0 },
+        { id: "video",   icon: "🎬", label: "Video (Kling, slow)",  status: "pending", elapsed: 0, cost: 0 },
+        { id: "compose", icon: "🎚", label: "Mix & finalize",       status: "pending", elapsed: 0, cost: 0 },
+      ],
+
+      // Output
+      output: {
+        slogan: null, tone: null, voiceover_script: null,
+        poster: null, voiceover: null, bgm: null, video: null,
+        sizes: null, theme_full: null,
+        campaign_id: null,
+      },
+      typedSlogan: "",
+      typing: false,
+      posterTab: "original",
+
+      // Lists
+      gallery: [],
+      demoCases: [],
+
+      // PDF
+      exportingPdf: false,
+
+      // Toast
+      toast: "",
+
+      // -------- lifecycle ---------
+      async init() {
+        await this.loadHealth();
+        await this.loadPresets();
+        await this.loadDefaultProduct();
+        await this.loadGallery();
+        await this.loadDemoCases();
+        if (this.demoCases.length === 0) {
+          this.demoMode = false;
+        }
+      },
+
+      async loadHealth() {
+        try { this.health = await (await fetch("/api/health")).json(); } catch {}
+      },
+
+      async loadPresets() {
+        try {
+          this.presets = await (await fetch("/api/presets")).json();
+        } catch (e) { console.error(e); }
+      },
+
+      async loadDefaultProduct() {
+        try {
+          const p = await (await fetch("/api/product-info")).json();
+          if (p && p.product_name) this.product = { ...this.product, ...p };
+        } catch {}
+      },
+
+      async loadGallery() {
+        try { this.gallery = await (await fetch("/api/gallery")).json(); } catch {}
+      },
+
+      async loadDemoCases() {
+        try { this.demoCases = await (await fetch("/api/demo-cases")).json(); } catch {}
+      },
+
+      // -------- helpers ---------
+      canGenerate() {
+        return !!(this.product.company_name && this.product.product_name && this.product.product_description);
+      },
+
+      hasOutput() {
+        return !!(this.output.slogan || this.output.poster || this.output.video);
+      },
+
+      currentPosterUrl() {
+        if (this.posterTab === "original") return this.output.poster;
+        return (this.output.sizes && this.output.sizes[this.posterTab]) || this.output.poster;
+      },
+
+      presetMusicGenre() {
+        const id = this.output.preset_id || this.selectedPreset;
+        const d = this.presetDetails[id];
+        return d?.music_genre || "Generated soundtrack";
+      },
+
+      extractHexes(s) {
+        if (!s) return [];
+        const matches = s.match(/#[0-9A-Fa-f]{6}/g) || [];
+        return [...new Set(matches)];
+      },
+
+      showToast(msg, ms=3000) {
+        this.toast = msg;
+        setTimeout(() => { this.toast = ""; }, ms);
+      },
+
+      _resetSteps() {
+        this.steps.forEach(s => { s.status = "pending"; s.elapsed = 0; s.cost = 0; });
+        this.cost = 0;
+        this.completed = false;
+        this.output = {
+          slogan: null, tone: null, voiceover_script: null,
+          poster: null, voiceover: null, bgm: null, video: null,
+          sizes: null, theme_full: null, campaign_id: null,
+          preset_id: this.selectedPreset,
+        };
+        this.typedSlogan = "";
+        this.typing = false;
+      },
+
+      // -------- quick brief extraction ---------
+      async extractFromQuick() {
+        if (!this.quickText.trim()) return;
+        this.extracting = true;
+        try {
+          const r = await fetch("/api/extract-product", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text: this.quickText })
+          });
+          if (!r.ok) throw new Error(await r.text());
+          const data = await r.json();
+          this.product = { ...this.product, ...data, selling_points: data.selling_points || [] };
+          this.showToast("Brief auto-filled ✨");
+        } catch (e) {
+          this.showToast("Extract failed: " + e.message);
+        } finally {
+          this.extracting = false;
+        }
+      },
+
+      // -------- preset details (lazy) ---------
+      async _ensurePresetDetail(id) {
+        if (!id || this.presetDetails[id]) return;
+        try {
+          this.presetDetails[id] = await (await fetch("/api/preset/" + id)).json();
+        } catch {}
+      },
+
+      // -------- generation ---------
+      async startGenerate() {
+        if (!this.canGenerate() || this.generating) return;
+        await this._ensurePresetDetail(this.selectedPreset);
+        this._resetSteps();
+        this.generating = true;
+        this.startedAt = Date.now();
+        this._tickElapsed();
+
+        try {
+          const r = await fetch("/api/generate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              product_info: this.product,
+              preset_id: this.selectedPreset
+            })
+          });
+          if (!r.ok) throw new Error(await r.text());
+          const { job_id } = await r.json();
+          this._poll(job_id);
+        } catch (e) {
+          this.generating = false;
+          this.showToast("Generate failed: " + e.message);
+          clearInterval(this._elapsedTimer);
+        }
+      },
+
+      _tickElapsed() {
+        clearInterval(this._elapsedTimer);
+        this._elapsedTimer = setInterval(() => {
+          const s = Math.floor((Date.now() - this.startedAt) / 1000);
+          const m = Math.floor(s / 60);
+          this.elapsedLabel = (m > 0 ? m + "m " : "") + (s % 60) + "s";
+        }, 250);
+      },
+
+      _poll(jobId) {
+        // Bulletproof polling: every 2s ask the server for new events.
+        // Survives Mac sleep, network blips, tab backgrounding, etc.
+        if (this._pollTimer) clearInterval(this._pollTimer);
+        let seen = 0;
+        let consecutiveErrors = 0;
+        const tick = async () => {
+          try {
+            const r = await fetch(`/api/job-state/${jobId}?since=${seen}`);
+            const data = await r.json();
+            consecutiveErrors = 0;
+
+            if (Array.isArray(data.events)) {
+              for (const evt of data.events) {
+                if (evt.event === "step") this._onStep(evt.data);
+                else if (evt.event === "complete") this._onComplete(evt.data);
+                else if (evt.event === "error") this.showToast("Error: " + (evt.data?.message || "unknown"));
+              }
+              seen = data.total_events;
+            }
+
+            if (data.status === "done" || data.status === "error" || data.status === "unknown") {
+              clearInterval(this._pollTimer);
+              this._pollTimer = null;
+              this.generating = false;
+              clearInterval(this._elapsedTimer);
+              if (data.status === "error" && data.error) {
+                this.showToast("Failed: " + data.error);
+              } else if (data.status === "unknown") {
+                // Job state expired (server restarted, TTL hit, etc.).
+                // Fall back to gallery to recover.
+                this.loadGallery();
+              }
+            }
+          } catch (e) {
+            // Network blip — keep polling, don't give up after one error
+            consecutiveErrors++;
+            if (consecutiveErrors > 30) { // ~1 min of failures
+              clearInterval(this._pollTimer);
+              this._pollTimer = null;
+              this.generating = false;
+              clearInterval(this._elapsedTimer);
+              this.showToast("Lost connection to server.");
+            }
+          }
+        };
+        this._pollTimer = setInterval(tick, 2000);
+        tick();
+      },
+
+      _findStep(id) { return this.steps.find(s => s.id === id); },
+
+      _onStep(d) {
+        const s = this._findStep(d.id);
+        if (!s) return;
+        if (d.status) s.status = d.status;
+        if (d.elapsed != null) s.elapsed = d.elapsed;
+        if (d.cost != null) s.cost = d.cost;
+        if (d.label) s.label = d.label;
+        if (d.cumulative_cost != null) this._animateCost(d.cumulative_cost);
+
+        if (d.id === "slogan" && d.status === "done" && d.result) {
+          this.output.theme_full = d.result;
+          this.output.tone = d.result.tone;
+          this.output.voiceover_script = d.result.voiceover_script;
+          this._typeSlogan(d.result.slogan);
+        }
+        if (d.id === "poster" && d.url) this.output.poster = d.url;
+        if (d.id === "tts"    && d.url) this.output.voiceover = d.url;
+        if (d.id === "bgm"    && d.url) this.output.bgm = d.url;
+        if (d.id === "social" && d.sizes) this.output.sizes = d.sizes;
+        if (d.id === "compose" && d.url) this.output.video = d.url;
+      },
+
+      _onComplete(d) {
+        this.completed = true;
+        this.output.campaign_id = d.campaign_dir;
+        this._animateCost(d.total_cost);
+        try {
+          confetti({ particleCount: 220, spread: 90, origin: { y: 0.5 }, colors: ['#7c3aed','#ec4899','#06b6d4','#fbbf24'] });
+        } catch {}
+        this.showToast(`Done in ${d.total_elapsed}s · $${d.total_cost.toFixed(3)} 🎉`);
+        this.loadGallery();
+      },
+
+      _animateCost(target) {
+        const start = this.cost;
+        const dur = 600;
+        const t0 = performance.now();
+        const step = (t) => {
+          const k = Math.min(1, (t - t0) / dur);
+          this.cost = start + (target - start) * (1 - Math.pow(1 - k, 3));
+          if (k < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+      },
+
+      _typeSlogan(text) {
+        this.typedSlogan = "";
+        this.typing = true;
+        let i = 0;
+        const tick = () => {
+          this.typedSlogan = text.slice(0, i);
+          i++;
+          if (i <= text.length) setTimeout(tick, 35);
+          else this.typing = false;
+        };
+        tick();
+      },
+
+      // -------- load existing campaign ---------
+      async loadCampaign(c, isDemo) {
+        try {
+          const summary = c.summary || await (await fetch("/api/campaign/" + c.id)).json();
+          this.output = {
+            slogan: summary.campaign_theme.slogan,
+            tone: summary.campaign_theme.tone,
+            voiceover_script: summary.campaign_theme.voiceover_script,
+            theme_full: summary.campaign_theme,
+            poster: "/" + c.poster,
+            voiceover: "/" + (isDemo ? "presets_demo" : "outputs") + "/" + c.id + "/voiceover.mp3",
+            bgm: "/" + (isDemo ? "presets_demo" : "outputs") + "/" + c.id + "/bgm.mp3",
+            video: "/" + c.video,
+            sizes: {
+              ig_square: "/" + c.ig_square,
+              ig_story: "/" + c.ig_story,
+              wide: "/" + c.wide,
+            },
+            campaign_id: c.id,
+            preset_id: summary.preset_id,
+          };
+          this._typeSlogan(this.output.slogan || "");
+          this.completed = true;
+          this.cost = summary.total_cost || 0;
+          this.steps.forEach(s => s.status = "done");
+          window.scrollTo({ top: document.body.scrollHeight * 0.3, behavior: "smooth" });
+          if (summary.preset_id) await this._ensurePresetDetail(summary.preset_id);
+        } catch (e) {
+          this.showToast("Load failed: " + e.message);
+        }
+      },
+
+      // -------- PDF ---------
+      async exportPdf() {
+        const id = this.output.campaign_id;
+        if (!id) return;
+        this.exportingPdf = true;
+        try {
+          const r = await fetch("/api/export-pdf/" + id, { method: "POST" });
+          if (!r.ok) throw new Error(await r.text());
+          const blob = await r.blob();
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url; a.download = id + "_pitch_deck.pdf";
+          document.body.appendChild(a); a.click(); a.remove();
+          URL.revokeObjectURL(url);
+          this.showToast("PDF downloaded 📄");
+        } catch (e) {
+          this.showToast("PDF failed: " + e.message);
+        } finally {
+          this.exportingPdf = false;
+        }
+      },
+    };
+  }
+</script>
+</body>
+</html>
